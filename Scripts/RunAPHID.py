@@ -14,7 +14,7 @@ def ReadMatches(filename):
             s_pfam, s_seq, path = m.split('|')
             s_pfam = int(s_pfam)
             s_seq = int(s_seq)
-            path = map(int, path.split(','))
+            path = list(map(int, path.split(',')))
             #PackDict 
             matches[seq] = (s_pfam, s_seq, path)
     return(matches)
@@ -25,7 +25,6 @@ def ParseMatches(matchdict, maxP):
         s_pfam, s_seq, path = matchdict[seq]
         path_pfam = [None]*len(path)
         path_seq = [None]*len(path)
-
         #Find the first non-deletion (0) position in the path for sequence
         foundNonZero = False
         i = 0
@@ -56,7 +55,6 @@ def ParseMatches(matchdict, maxP):
             if path[i] != 2:
                 path_pfam[i] = lastP + 1
                 lastP += 1
-
         #Get Matches
         matches = ['-']*maxP
         for p_pfam, p_seq in zip(path_pfam, path_seq):
@@ -78,6 +76,9 @@ def HMM2MaxP(filename):
 HMM = sys.argv[1]
 SEQS = sys.argv[2]
 ALNTYPE = sys.argv[3]
+Rscript_PATH = '.'
+if len(sys.argv)>4:
+    Rscript_PATH=sys.argv[4]
 
 #PrepOutput
 loc_Output = 'DBDMatchPos_aphid/'
@@ -88,7 +89,7 @@ loc_RootName = loc_Output + SEQS.split('/')[-1].replace('.fa','')
 #print loc_RootName
     
 #1) Run R/Aphid Matches
-os.system('Rscript RunAPHID.R %s %s %s %s'%(HMM, SEQS, ALNTYPE, loc_RootName)) 
+os.system('Rscript %s/RunAPHID.R %s %s %s %s'%(Rscript_PATH, HMM, SEQS, ALNTYPE, loc_RootName))
 
 #2) Parse Results
 hmm_len = HMM2MaxP(HMM)
