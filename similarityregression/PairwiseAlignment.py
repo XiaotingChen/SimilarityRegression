@@ -1,8 +1,8 @@
 def ReturnBlossum62Dict():
-    # from Bio.SubsMat.MatrixInfo import blosum62
-    from Bio.Align import substitution_matrices
+    from Bio.SubsMat.MatrixInfo import blosum62
+    #from Bio.Align import substitution_matrices
 
-    blosum62 = substitution_matrices.load("BLOSUM62")
+    #blosum62 = substitution_matrices.load("BLOSUM62")
     subMat = {}
     for p, v in blosum62.items():
         subMat[p] = v
